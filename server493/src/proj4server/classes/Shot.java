@@ -1,4 +1,4 @@
-package eecs285.proj4server.classes;
+package proj4server.classes;
 
 public class Shot {
   

@@ -1,14 +1,16 @@
-package eecs285.proj4server.classes;
+package proj4server.classes;
 
 import java.awt.Dimension;
 import java.io.*;
+import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-import eecs285.proj4server.classes.Shot;
+import proj4server.classes.Shot;
 
 public class ServerGame{
   private int port;
@@ -42,6 +44,21 @@ public class ServerGame{
   private String name3;
   private String name4;
   
+  private boolean shield1 = false;
+  private boolean shield2 = false;
+  private boolean shield3 = false;
+  private boolean shield4 = false;
+  
+  private boolean white1 = false;
+  private boolean white2 = false;
+  private boolean white3 = false;
+  private boolean white4 = false;
+  
+  private boolean double1 = false;
+  private boolean double2 = false;
+  private boolean double3 = false;
+  private boolean double4 = false;
+  
   private Shot[] roundShots;
   
   public ServerGame(){
@@ -61,10 +78,19 @@ public class ServerGame{
   //waits for a connection before continuing 
   public void startServer(){
     
-    JFrame test = new JFrame("ShipWars Server");
+	  String address = "";
+	    try{
+	      address = Inet4Address.getLocalHost().getHostAddress();
+	    }
+	    catch (UnknownHostException e){}
+	    if(address == ""){
+	      address = "IP Address Unkown";
+	    }
+	    
+	    JFrame test = new JFrame("ShipWars Server - " + address);
     test.pack();
     test.setVisible(true);
-    test.setMinimumSize(new Dimension(185, 10));
+    test.setMinimumSize(new Dimension(285, 10));
     test.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     
     try{
@@ -208,96 +234,161 @@ public class ServerGame{
       int index;
       
       //player 1
-      count = inData1.readInt();
-      totalRoundShots += count;
-      for(int i = 0; i < count; ++i){
-        playerNumber = inData1.readInt();
-        index = inData1.readInt();
-        if(playerNumber == 2){
-          hitOrMiss = ocean2[index];
-          roundShots[shotNumber] = new Shot(hitOrMiss, index, 2);
-          ++shotNumber;
-        }
-        else if(playerNumber == 3){
-          hitOrMiss = ocean3[index];
-          roundShots[shotNumber] = new Shot(hitOrMiss, index, 3);
-          ++shotNumber;
-        }
-        else if(playerNumber == 4){
-          hitOrMiss = ocean4[index];
-          roundShots[shotNumber] = new Shot(hitOrMiss, index, 4);
-          ++shotNumber;
-        }
-      }
+  
+	      count = inData1.readInt();
+	      totalRoundShots += count;
+	      for(int i = 0; i < count; ++i){
+	        playerNumber = inData1.readInt();
+	        index = inData1.readInt();
+	        if(playerNumber == 2){
+	          if(shield2){
+	        	  totalRoundShots--;
+	          }
+	          else{
+		          hitOrMiss = ocean2[index];
+		          roundShots[shotNumber] = new Shot(hitOrMiss, index, 2);
+		          ++shotNumber;
+	          }
+	        }
+	        else if(playerNumber == 3){
+	          if(shield3){
+	          	  totalRoundShots--;
+	          }
+	          else{
+		          hitOrMiss = ocean3[index];
+		          roundShots[shotNumber] = new Shot(hitOrMiss, index, 3);
+		          ++shotNumber;
+	          }
+	        }
+	        else if(playerNumber == 4){
+	          if(shield4){
+	        	  totalRoundShots--;
+	          }
+	          else{
+		          hitOrMiss = ocean4[index];
+		          roundShots[shotNumber] = new Shot(hitOrMiss, index, 4);
+		          ++shotNumber;
+	          }
+	        }
+	      }
       
       //player 2
-      count = inData2.readInt();
-      totalRoundShots += count;
-      for(int i = 0; i < count; ++i){
-        playerNumber = inData2.readInt();
-        index = inData2.readInt();
-        if(playerNumber == 2){
-          hitOrMiss = ocean1[index];
-          roundShots[shotNumber] = new Shot(hitOrMiss, index, 1);
-          ++shotNumber;
-        }
-        else if(playerNumber == 3){
-          hitOrMiss = ocean3[index];
-          roundShots[shotNumber] = new Shot(hitOrMiss, index, 3);
-          ++shotNumber;
-        }
-        else if(playerNumber == 4){
-          hitOrMiss = ocean4[index];
-          roundShots[shotNumber] = new Shot(hitOrMiss, index, 4);
-          ++shotNumber;
-        }
-      }
+      
+	      count = inData2.readInt();
+	      totalRoundShots += count;
+	      for(int i = 0; i < count; ++i){
+	        playerNumber = inData2.readInt();
+	        index = inData2.readInt();
+	        if(playerNumber == 2){
+	            if(shield1){
+	          	  totalRoundShots--;
+	            }
+	            else{
+	  	          hitOrMiss = ocean1[index];
+	  	          roundShots[shotNumber] = new Shot(hitOrMiss, index, 1);
+	  	          ++shotNumber;
+	            }
+	          }
+	        else if(playerNumber == 3){
+	            if(shield3){
+	            	  totalRoundShots--;
+	            }
+	            else{
+	  	          hitOrMiss = ocean3[index];
+	  	          roundShots[shotNumber] = new Shot(hitOrMiss, index, 3);
+	  	          ++shotNumber;
+	            }
+	          }
+	        else if(playerNumber == 4){
+	            if(shield4){
+	          	  totalRoundShots--;
+	            }
+	            else{
+	  	          hitOrMiss = ocean4[index];
+	  	          roundShots[shotNumber] = new Shot(hitOrMiss, index, 4);
+	  	          ++shotNumber;
+	            }
+	        }
+	      }
       
       //player 3
-      count = inData3.readInt();
-      totalRoundShots += count;
-      for(int i = 0; i < count; ++i){
-        playerNumber = inData3.readInt();
-        index = inData3.readInt();
-        if(playerNumber == 2){
-          hitOrMiss = ocean1[index];
-          roundShots[shotNumber] = new Shot(hitOrMiss, index, 1);
-          ++shotNumber;
-        }
-        else if(playerNumber == 3){
-          hitOrMiss = ocean2[index];
-          roundShots[shotNumber] = new Shot(hitOrMiss, index, 2);
-          ++shotNumber;
-        }
-        else if(playerNumber == 4){
-          hitOrMiss = ocean4[index];
-          roundShots[shotNumber] = new Shot(hitOrMiss, index, 4);
-          ++shotNumber;
-        }
-      }
+    
+	      count = inData3.readInt();
+	      totalRoundShots += count;
+	      for(int i = 0; i < count; ++i){
+	        playerNumber = inData3.readInt();
+	        index = inData3.readInt();
+	        if(playerNumber == 2){
+	            if(shield1){
+	          	  totalRoundShots--;
+	            }
+	            else{
+	  	          hitOrMiss = ocean1[index];
+	  	          roundShots[shotNumber] = new Shot(hitOrMiss, index, 1);
+	  	          ++shotNumber;
+	            }
+	          }
+	        else if(playerNumber == 3){
+	            if(shield2){
+	            	  totalRoundShots--;
+	            }
+	            else{
+	  	          hitOrMiss = ocean2[index];
+	  	          roundShots[shotNumber] = new Shot(hitOrMiss, index, 2);
+	  	          ++shotNumber;
+	            }
+	          }
+	        else if(playerNumber == 4){
+	            if(shield4){
+	          	  totalRoundShots--;
+	            }
+	            else{
+	  	          hitOrMiss = ocean4[index];
+	  	          roundShots[shotNumber] = new Shot(hitOrMiss, index, 4);
+	  	          ++shotNumber;
+	            }
+	        }
+	      }
       
       //player 4
-      count = inData4.readInt();
-      totalRoundShots += count;
-      for(int i = 0; i < count; ++i){
-        playerNumber = inData4.readInt();
-        index = inData4.readInt();
-        if(playerNumber == 2){
-          hitOrMiss = ocean1[index];
-          roundShots[shotNumber] = new Shot(hitOrMiss, index, 1);
-          ++shotNumber;
-        }
-        else if(playerNumber == 3){
-          hitOrMiss = ocean2[index];
-          roundShots[shotNumber] = new Shot(hitOrMiss, index, 2);
-          ++shotNumber;
-        }
-        else if(playerNumber == 4){
-          hitOrMiss = ocean3[index];
-          roundShots[shotNumber] = new Shot(hitOrMiss, index, 3);
-          ++shotNumber;
-        }
-      }
+    
+	      count = inData4.readInt();
+	      totalRoundShots += count;
+	      for(int i = 0; i < count; ++i){
+	        playerNumber = inData4.readInt();
+	        index = inData4.readInt();
+	        if(playerNumber == 2){
+	            if(shield1){
+	          	  totalRoundShots--;
+	            }
+	            else{
+	  	          hitOrMiss = ocean1[index];
+	  	          roundShots[shotNumber] = new Shot(hitOrMiss, index, 1);
+	  	          ++shotNumber;
+	            }
+	          }
+	        else if(playerNumber == 3){
+	            if(shield2){
+	            	  totalRoundShots--;
+	            }
+	            else{
+	  	          hitOrMiss = ocean2[index];
+	  	          roundShots[shotNumber] = new Shot(hitOrMiss, index, 2);
+	  	          ++shotNumber;
+	            }
+	          }
+	        else if(playerNumber == 4){
+	            if(shield3){
+	          	  totalRoundShots--;
+	            }
+	            else{
+	  	          hitOrMiss = ocean3[index];
+	  	          roundShots[shotNumber] = new Shot(hitOrMiss, index, 3);
+	  	          ++shotNumber;
+	            }
+	        }
+	      }
+      
     }
     catch(IOException excep){}
     return totalRoundShots;
@@ -321,6 +412,18 @@ public class ServerGame{
     }
     catch(IOException excep){}
   }
+  
+  public void sendUsedPowerUps(DataOutputStream playerOS, boolean hide, boolean shield, boolean shot,
+          int playerNumber){
+	try{
+	playerOS.writeInt(playerNumber);
+	playerOS.writeBoolean(hide);
+	playerOS.writeBoolean(shield);
+	playerOS.writeBoolean(shot);
+	
+	}
+	catch(IOException excep){}
+	}
   
   public void sendShots(int count){
     int playerNumber;
@@ -412,6 +515,90 @@ public class ServerGame{
     sendShipsRemaining(outData4, shipsRemaining2, 3);
     sendShipsRemaining(outData4, shipsRemaining3, 4);
     sendShipsRemaining(outData4, shipsRemaining4, 1);
+  }
+  
+  public void flipspower(){
+	  if(shield1) shield1 = false;
+	  if(shield2) shield2 = false;
+	  if(shield3) shield3 = false;
+	  if(shield4) shield4 = false;
+	  if(white1) white1 = false; 
+	  if(white2) white2 = false; 
+	  if(white3) white3 = false; 
+	  if(white4) white4 = false; 
+	  if(double1) double1 = false;
+	  if(double2) double2 = false; 
+	  if(double3) double3 = false; 
+	  if(double4) double4 = false; 
+  }
+  
+  public void getPowerUps(){
+	  try{
+	      
+	      boolean sent = false;
+	      
+	      //player 1
+	      
+		      sent = inData1.readBoolean();
+		      if(sent){
+		    	  shield1 = inData1.readBoolean();
+		    	  white1 = inData1.readBoolean();
+		    	  double1 = inData1.readBoolean();
+		        
+		      }
+	      
+	     
+		      sent = inData2.readBoolean();
+		      if(sent){
+		    	  shield2 = inData2.readBoolean();
+		    	  white2 = inData2.readBoolean();
+		    	  double2 = inData2.readBoolean();
+		        
+		      }
+	      
+	     
+		      sent = inData3.readBoolean();
+		      if(sent){
+		    	  shield3 = inData3.readBoolean();
+		    	  white3 = inData3.readBoolean();
+		    	  double3 = inData3.readBoolean();
+		        
+		      }
+	      
+	      
+		      sent = inData4.readBoolean();
+		      if(sent){
+		    	  shield4 = inData4.readBoolean();
+		    	  white4 = inData4.readBoolean();
+		    	  double4 = inData4.readBoolean();
+		        
+		      }
+	      
+	    }
+	    catch(IOException excep){}
+	 
+  }
+  
+
+  
+  public void sendPowerups(){
+	  
+	sendUsedPowerUps(outData1, white2, shield2, double2, 2);
+	sendUsedPowerUps(outData1, white3, shield3, double3, 3);
+	sendUsedPowerUps(outData1, white4, shield4, double4, 4);
+	
+	sendUsedPowerUps(outData2, white1, shield1, double1, 2);
+	sendUsedPowerUps(outData2, white3, shield3, double3, 3);
+	sendUsedPowerUps(outData2, white4, shield4, double4, 4);
+	
+	sendUsedPowerUps(outData3, white1, shield1, double1, 2);
+	sendUsedPowerUps(outData3, white2, shield2, double2, 3);
+	sendUsedPowerUps(outData3, white4, shield4, double4, 4);
+	
+	sendUsedPowerUps(outData4, white1, shield1, double1, 2);
+	sendUsedPowerUps(outData4, white2, shield2, double2, 3);
+	sendUsedPowerUps(outData4, white3, shield3, double3, 4);
+	 
   }
   
 }

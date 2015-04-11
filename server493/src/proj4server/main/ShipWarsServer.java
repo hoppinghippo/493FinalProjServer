@@ -1,6 +1,6 @@
-package eecs285.proj4server.main;
+package proj4server.main;
 
-import eecs285.proj4server.classes.ServerGame;
+import proj4server.classes.ServerGame;
 
 public class ShipWarsServer{
   public static void main(String [] args){
@@ -10,10 +10,13 @@ public class ShipWarsServer{
     game.getShipPlacement();
     game.getAndSendPlayerNames();
     while(true){
+      game.getPowerUps();
       int count = game.getShots();
       game.sendShots(count);
       game.receiveShipsRemaining();
       game.updateShipsRemaining();
+      game.sendPowerups();
+      game.flipspower();
     }
   }
 }
